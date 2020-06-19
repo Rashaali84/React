@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Exercise 1
 // Since Japanese is not everyboy's forte,
@@ -8,10 +8,13 @@ import React, {useState} from 'react';
 
 const Ex1 = function () {
     const [text, setText] = useState('Hello 世界');
+    function handleText(e) {
+        setText('Hello World');
+    }
     return (
         <div>
             <p>{text}</p>
-            <button onClick={() => { setText() /* Fix something here */ }}>
+            <button onClick={handleText}>
                 Translation please
             </button>
         </div>
@@ -26,12 +29,17 @@ const Ex1 = function () {
 const Ex2 = function () {
     const text = ['Hello 世界', 'Hello World'];
     const [idx, setIdx] = useState(0);
+
+    function handleSecondClick(e) {
+        if (idx === 0)
+            setIdx(1);
+        else
+            setIdx(0);
+    }
     return (
         <div>
             <p>{text[idx]}</p>
-            <button onClick={() => {
-                /* Write some logic here */
-            }}>
+            <button onClick={handleSecondClick}>
                 Translation please
             </button>
         </div>
@@ -44,15 +52,33 @@ const Ex2 = function () {
 // If not, make it so that if we click on the button
 // it always changes the text to the other language (the text toggles)
 
+// there is an error in the exercise 'Hallo Wereld'
 const Ex3 = function () {
-    const text = ['Hello 世界', 'Hello World', 'Dag Wereld', 'Bonjour le monde', 'Hallo Welt'];
+    const text = ['Hello 世界', 'Hello World', 'Hallo Wereld', 'Bonjour le monde', 'Hallo Welt'];
     const [idx, setIdx] = useState(0);
+    function hanldleAllClicks(e) {
+        switch (idx) {
+            case 0:
+                setIdx(1);
+                break;
+            case 1:
+                setIdx(2);
+                break;
+            case 2:
+                setIdx(3);
+                break;
+            case 3:
+                setIdx(4);
+                break;
+            case 4:
+                setIdx(0);
+        }
+
+    }
     return (
         <div>
             <p>{text[idx]}</p>
-            <button onClick={() => {
-                /* Write some logic here */
-            }}>
+            <button onClick={hanldleAllClicks}>
                 Translation please
             </button>
         </div>
@@ -70,13 +96,18 @@ const Ex4 = function () {
     const lang = ['english', 'japanese'];
     const text = ['Hello 世界', 'Hello World'];
     const [idx, setIdx] = useState(0);
+    function handleBtnText(e) {
+        if (idx == 0)
+            setIdx(1);
+        else
+            setIdx(0);
+
+    }
     return (
         <div>
             <p>{text[idx]}</p>
-            <button onClick={() => {
-                /* Write some logic here */
-            }}>
-                Translation to {/* Insert a variable here */} please
+            <button onClick={handleBtnText}>
+                Translation to {lang[idx]} please
             </button>
         </div>
     )
@@ -90,10 +121,13 @@ const Ex4 = function () {
 
 const Ex5 = function () {
     const [count, setCount] = useState(0);
+    function handleClick(e) {
+        setCount(count + 1);
+    }
     return (
         <div>
             <p>{count}</p>
-            <button /* Add something here */>
+            <button onClick={handleClick}>
                 Click me!
             </button>
         </div>
@@ -108,11 +142,17 @@ const Ex5 = function () {
 // No? too bad...
 
 const Ex6 = function () {
-    const [fib, setFib] = useState( /* Set the initial value of the state here */);
+    const [fib, setFib] = useState({ prev1: 0, prev2: 0 });
+    function handleFibo(e) {
+        if (fib.prev1 === 0 && fib.prev2 === 0)
+            setFib({ prev1: 1, prev2: 0 });
+        else
+            setFib({ prev1: fib.prev2 + fib.prev1, prev2: fib.prev1 })
+    }
     return (
         <div>
-            <p>{/* The value you should put here is: `fib[0]`, but this will only work after you set the initial state */}</p>
-            <button onClick={() => { /* Write a function to update the state */ }}>
+            <p>{fib.prev1}</p>
+            <button onClick={handleFibo}>
                 Click me!
             </button>
         </div>
@@ -126,10 +166,14 @@ const Ex6 = function () {
 
 const Ex7 = function () {
     /* Init the state here */
+    const [noClicks, setNoClicks] = useState(0);
+    function handleCountClicks(e) {
+        setNoClicks(noClicks + 1);
+    }
     return (
         <div>
-            <p>{/* Set a value here */}</p>
-            <button /* Add something here */>
+            <p>{noClicks}</p>
+            <button onClick={handleCountClicks}>
                 click me
             </button>
         </div>
@@ -147,16 +191,23 @@ const Ex7 = function () {
 
 const Ex8 = function () {
     /* init state and function to update it here */
+    const [text, setText] = useState('');
     return (
         <div>
-            <p>I like {/* Add something here */}</p>
-            <button /* Add something here */>
+            <p>I like {text}</p>
+            <button onClick={() => {
+                setText('fruit');
+            }}>
                 fruit
             </button>
-            <button /* Add something here */>
+            <button onClick={() => {
+                setText('meat');
+            }}>
                 meat
             </button>
-            <button /* Add something here */>
+            <button onClick={() => {
+                setText('vegetables');
+            }}>
                 vegetables
             </button>
         </div>
@@ -176,13 +227,20 @@ const Ex8 = function () {
 
 const Ex9 = function () {
     /* init state and function to update it here */
+    const [pTag, setPtag] = useState('Last click:');
+
     return (
         <div>
-            <p>Last click: {/* Add something here */}</p>
-            <button /* Add something here */>
+            <p>Last click:{pTag === 'Last click:' ? '' : pTag}</p>
+            <button onClick={() => {
+                setPtag(' UPPER');
+
+            }}>
                 UPPER
             </button>
-            <button /* Add something here */>
+            <button onClick={() => {
+                setPtag(' LOWER');
+            }}>
                 LOWER
             </button>
         </div>
@@ -204,10 +262,10 @@ const Ex10 = function () {
         <div>
             <ul>
                 {
-                    /* render the items as an li here */
+                    items.map((item, index) => <li key={index}> {item}</li>)
                 }
             </ul>
-            <button onClick={() => { /* Set the items here */  }}>
+            <button onClick={() => { setItems([...items, 'containerd']) }}>
                 Add element
             </button>
         </div>
@@ -233,15 +291,18 @@ const Ex10 = function () {
 const Ex11 = function () {
     const default_list = ['ipsizzle', 'nullizzle', 'sapizzle', 'velizzle', 'crackalackin', 'maurizzle', 'rhoncizzle'];
     const [items, setItems] = useState([]);
-    const [idx, setIdx] = useState(1);
+    const [idx, setIdx] = useState(0);
     return (
         <div>
             <ul>
                 {
-                    /* render the items as an li here */
+                    items.map((item, index) => <li key={index}> {item}</li>)
                 }
             </ul>
             <button onClick={() => {
+
+                setItems([...items, default_list[idx]]);
+                setIdx(idx + 1);
                 /* update the state here */
             }}>
                 Add element
@@ -258,17 +319,20 @@ const Ex11 = function () {
 // Goal
 // Same as previous exercice, but this time the list is passed as a props
 
-const Ex12 = function ({base_list}) {
+const Ex12 = function ({ base_list }) {
     const [items, setItems] = useState([]);
-    const [idx, setIdx] = useState(1);
+    const [idx, setIdx] = useState(0);
     return (
         <div>
             <ul>
                 {
-                    /* render the items as an li here */
+
+                    items.map((item, index) => <li key={index}> {item} </li>)
                 }
             </ul>
             <button onClick={() => {
+                setItems([...items, base_list[idx]]);
+                setIdx(idx + 1);
                 /* update the state here */
             }}>
                 Add element
@@ -282,28 +346,31 @@ const Ex12 = function ({base_list}) {
 // Add an extra button element with the text "Remove element"
 // Goal
 // On "Add element" button click, a new item is added to the unordered list.
-// On "Remove element" button click, a new item is added to the unordered list.
+// On "Remove element" button click, a new item is removed to the unordered list.
 // Use the same list as in exercice 11
 
 
 const Ex13 = function () {
     const default_list = ['ipsizzle', 'nullizzle', 'sapizzle', 'velizzle', 'crackalackin', 'maurizzle', 'rhoncizzle'];
     const [items, setItems] = useState([]);
-    const [idx, setIdx] = useState(1);
+    const [idx, setIdx] = useState(0);
     return (
         <div>
             <ul>
                 {
-                    /* render the items as an li here */
+                    items.map((item, index) => <li key={index}> {item}</li>)
                 }
             </ul>
             <button onClick={() => {
-                /* update the state here */
+                setItems([...items, default_list[idx]]);
+                setIdx(idx + 1);
             }}>
                 Add element
             </button>
             <button onClick={() => {
-                /* update the state here */
+                setItems([...items.splice(idx, 1)]);
+                if (idx != 0)
+                    setIdx(idx - 1);
             }}>
                 Remove element
             </button>
@@ -317,23 +384,28 @@ const Ex13 = function () {
 // Goal
 // Same as previous ex, but this time the list is passed as a props
 
-const Ex14 = function ({base_list}) {
+const Ex14 = function ({ base_list }) {
     const [items, setItems] = useState([]);
-    const [idx, setIdx] = useState(1);
+    const [idx, setIdx] = useState(0);
     return (
         <div>
             <ul>
+
                 {
-                    /* render the items as an li here */
+                    items.map((item, index) => <li key={index}> {item}</li>)
                 }
+
             </ul>
             <button onClick={() => {
-                /* update the state here */
+                setItems([...items, base_list[idx]]);
+                setIdx(idx + 1);
             }}>
                 Add element
             </button>
             <button onClick={() => {
-                /* update the state here */
+                setItems([...items.splice(idx, 1)]);
+                if (idx != 0)
+                    setIdx(idx - 1);
             }}>
                 Remove element
             </button>
@@ -342,7 +414,7 @@ const Ex14 = function ({base_list}) {
 };
 
 
-export {Ex1, Ex2, Ex3, Ex4, Ex5, Ex6, Ex7, Ex8, Ex9, Ex10, Ex11, Ex12, Ex13, Ex14};
+export { Ex1, Ex2, Ex3, Ex4, Ex5, Ex6, Ex7, Ex8, Ex9, Ex10, Ex11, Ex12, Ex13, Ex14 };
 
 
 
