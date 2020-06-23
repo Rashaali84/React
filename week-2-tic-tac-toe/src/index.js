@@ -8,7 +8,7 @@ class Square extends React.Component {
         // this.props.content can be
         // - null : square empty
         // - 'O', 'X' according to which one played this square before
-        
+
         return (
             <button className="square" onClick={() => {
                 console.log('square clicked');
@@ -27,29 +27,33 @@ class Board extends React.Component {
             null, null, null,
             null, null, null,
         ],
-        // or Array(9).fill(null)
+        // or Array(9).fill(nul l)
         currentPlayer: 'X',
         winner: null,
+        // these moves are for history logs 
+        moves: [{ moveIndex: null, xOry: null }]
+
+
     };
-    
+
     componentDidUpdate(prevProps, prevState, snapshot) {
         console.log('UPDATE');
         const squares = this.state.squares;
-        
+
         //Winner logic
         //we check that the winner is not already defined. We don't want to compute that again
         if (this.state.winner === null) {
             let winner = null;
             //horizontal cases
-            for (let a=0; a<9; a+=3) {
-                if (squares[a+0] !== null && squares[a+0] === squares[a+1] && squares[a+1] === squares[a+2]) {
-                    winner = squares[a+0];
+            for (let a = 0; a < 9; a += 3) {
+                if (squares[a + 0] !== null && squares[a + 0] === squares[a + 1] && squares[a + 1] === squares[a + 2]) {
+                    winner = squares[a + 0];
                 }
             }
             //vertical cases
-            for (let a=0; a<3; a+=1) {
-                if (squares[a+0] !== null && squares[a+0] === squares[a+3] && squares[a+3] === squares[a+6]) {
-                    winner = squares[a+0];
+            for (let a = 0; a < 3; a += 1) {
+                if (squares[a + 0] !== null && squares[a + 0] === squares[a + 3] && squares[a + 3] === squares[a + 6]) {
+                    winner = squares[a + 0];
                 }
             }
             //diagonal cases
@@ -59,7 +63,7 @@ class Board extends React.Component {
             if (squares[2] !== null && squares[2] === squares[4] && squares[4] === squares[6]) {
                 winner = squares[2];
             }
-            
+
             //If we found a winner, we update the state
             if (winner !== null) {
                 console.log('winner', winner);
@@ -68,23 +72,29 @@ class Board extends React.Component {
                 });
             }
         }
+
     }
-    
+
     renderSquare(i) {
         return <Square content={this.state.squares[i]} onPlay={() => {
             const newState = { ...this.state };
             newState.squares = newState.squares.slice();
+
+
             // Or (quick & dirty)
             // const newState = JSON.parse(JSON.stringify(this.state));
-    
+
             // To check that you actually have a copy :
             //  console.log(newState === this.state);
             //  console.log(newState.squares === this.state.squares);
             // Make sure both return false !
-            
+
             if (this.state.winner === null && newState.squares[i] === null) {
                 newState.squares[i] = this.state.currentPlayer;
-    
+                newState.moves.push({
+                    moveIndex: i, xOry: newState.currentPlayer
+                });
+
                 //Update the currentPlayer
                 const isX = this.state.currentPlayer === 'X';
                 if (isX) {
@@ -93,15 +103,40 @@ class Board extends React.Component {
                 else {
                     newState.currentPlayer = 'X';
                 }
-    
+
                 this.setState(newState);
             }
         }} />;
     }
-    
+    goBackStep(lastMovesIndex) {
+
+        //format the new state with the history steps 
+        const newState = { ...this.state };
+        newState.squares = newState.squares.slice();
+        newState.moves = newState.moves.slice();
+        newState.squares = Array(9).fill(null);
+
+        // filter the history to the only needed steps 
+        newState.moves = newState.moves.filter(function (value, index, arr) { return index <= lastMovesIndex; });
+        newState.moves.map((item, index) => {
+
+            if (index <= lastMovesIndex) {
+                newState.squares[item.moveIndex] = item.xOry;
+                newState.currentPlayer = item.xOry === 'X' ? 'O' : 'X';
+
+            }
+        })
+
+        newState.winner = null;
+        this.setState(newState);
+    }
+    displayHistory() {
+        // this function to add a clickable history logs 
+        return (this.state.moves.length !== 1) ? this.state.moves.map((item, index) => <li>  <button onClick={() => { console.log("item is clicked"); this.goBackStep(index) }}>Square Number :{item.moveIndex}---  Player Name : {item.xOry}</button></li>) : 'No History Found Yet'
+    }
     render() {
         const status = `Next player: ${this.state.currentPlayer}`;
-        
+
         return (
             <div>
                 <div className="status">{status}</div>
@@ -123,22 +158,26 @@ class Board extends React.Component {
                     {this.renderSquare(7)}
                     {this.renderSquare(8)}
                 </div>
+                <div className="game-info">
+
+                    <ol>{this.displayHistory()}</ol>
+                </div>
+
             </div>
+
         );
     }
 }
 
 class Game extends React.Component {
+
     render() {
         return (
             <div className="game">
                 <div className="game-board">
                     <Board />
                 </div>
-                <div className="game-info">
-                    <div>{/* status */}</div>
-                    <ol>{/* TODO */}</ol>
-                </div>
+
             </div>
         );
     }
