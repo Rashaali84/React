@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
 import './communication.css';
 
@@ -12,6 +12,8 @@ const InterActiveFruits = () => {
     const fruits = ['banana', 'apple'];
 
     const [grid, setGrid] = useState([]);
+    const [bounce, setBounce] = useState(false);
+    const [rotate, setRotate] = useState(false);
 
     // On click generate a grid of fruits
     const handleGenerateClick = () => {
@@ -30,33 +32,45 @@ const InterActiveFruits = () => {
         // Update the state
         setGrid(grid);
     };
-
+    const handleSetBounce = (bounce) => {
+        if (bounce === false)
+            setBounce(true);
+        else setBounce(false);
+    }
+    const handleSetRotate = (rotate) => {
+        if (rotate === false)
+            setRotate(true);
+        else setRotate(false);
+    }
     return (
         <section>
             <table>
                 <tbody>
-                {
-                    grid.map((row, rowIndex) => {
-                        return (
-                            <tr key={`${rowIndex}`}>
-                                {
-                                    row.map((fruit, columnIndex) => {return (
-                                        <td key={`${rowIndex}_${columnIndex}_${fruit}`}>
-                                            {/* TODO: Add state variables for bounce and rotate, assign them here */}
-                                            <InterActiveFruit key={`${rowIndex}_${columnIndex}_${fruit}`} name={fruit} bounce={false} rotate={false} />
-                                        </td>
-                                    )})
-                                }
-                            </tr>
-                        )
-                    })
-                }
+                    {
+                        grid.map((row, rowIndex) => {
+                            return (
+                                <tr key={`${rowIndex}`}>
+                                    {
+                                        row.map((fruit, columnIndex) => {
+                                            return (
+                                                <td key={`${rowIndex}_${columnIndex}_${fruit}`}>
+                                                    {/* TODO: Add state variables for bounce and rotate, assign them here */
+                                                    }
+                                                    <InterActiveFruit key={`${rowIndex}_${columnIndex}_${fruit}`} name={fruit} bounce={bounce} rotate={rotate} />
+                                                </td>
+                                            )
+                                        })
+                                    }
+                                </tr>
+                            )
+                        })
+                    }
                 </tbody>
             </table>
             <button onClick={handleGenerateClick}>Generate</button>
             {/* TODO: Add a click handler for bounce and rotate */}
-            <button>Bounce</button>
-            <button>Rotate</button>
+            <button onClick={() => { handleSetBounce(bounce); }}>Bounce</button>
+            <button onClick={() => { handleSetRotate(rotate); }}>Rotate</button>
         </section>
     )
 };
@@ -115,7 +129,7 @@ const InterActiveFruit = ({ name, bounce, rotate }) => {
 
 
 // Exercise: Fruit App
-// User can submit their favourite fruit in our form
+// User can submit their favorite fruit in our form
 // The form however only supports banana's and apples
 // TODO: finish connecting the FruitForm to our list
 // TODO: add support for oranges, make sure we can add oranges to our list
@@ -123,8 +137,14 @@ const InterActiveFruit = ({ name, bounce, rotate }) => {
 const FruitApp = () => {
     const [fruits, setFruits] = useState([]);
 
-    const onSubmit = () => {
+    const onSubmit = (fruit) => {
         /* update the fruits here */
+        let fruitTemp = fruits.slice();
+        if (['banana', 'apple', 'orange', 'peach'].includes(fruit)) {
+
+            fruitTemp.push(fruit);
+        }
+        setFruits(fruitTemp);
     };
 
     return (
@@ -135,40 +155,51 @@ const FruitApp = () => {
     )
 };
 
-const FruitList = ({ fruits }) => {
+const FruitList = (props) => {
+
+
     return (
         <ul>
-            {fruits.map((fruit, index) => {
-                return <li key={index}><Fruit name={fruit} /></li>
-            })}
+            {props.fruits.length > 0 &&
+                props.fruits.map((fruit, index) => {
+
+                    return <li key={index}><Fruit name={fruit} /></li>
+                })
+            }
         </ul>
     )
 };
 
-const Fruit = ({ name }) => {
+const Fruit = (props) => {
     let fruitMoji;
-    if (name === 'banana') {
+    if (props.name === 'banana') {
         fruitMoji = '🍌';
     }
-    else if (name === 'apple') {
+    else if (props.name === 'apple') {
         fruitMoji = '🍎'
+    }
+    else if (props.name === 'orange') {
+        fruitMoji = '🍊'
+    }
+    else if (props.name === 'peach') {
+        fruitMoji = '🍑';
     }
 
     return <span data-testid="fruit">{fruitMoji}</span>
 };
 
-const FruitForm = ({ onSubmitHandler }) => {
+const FruitForm = (props) => {
     const [fruit, setFruit] = useState('');
 
     const isValidFruit = (fruitInput) => {
-        return fruitInput === 'apple' || fruitInput === 'banana';
+        return fruitInput === 'apple' || fruitInput === 'banana' || fruitInput === 'orange' || fruitInput === 'peach';
     };
 
     const onSubmit = (event) => {
         event.preventDefault(); // We disable the default behaviour of a form
 
         if (isValidFruit(fruit)) {
-            onSubmitHandler(fruit)
+            props.onSubmitHandler(fruit)
         }
     };
 
@@ -202,13 +233,19 @@ const FruitAppWithBalance = () => {
 
     const onSubmitHandler = (fruit) => {
         /* update the fruits here */
-    };
+        let fruitTemp = fruits.slice();
+        if (['banana', 'apple', 'orange', 'peach'].includes(fruit)) {
 
+            fruitTemp.push(fruit);
+        }
+        setFruits(fruitTemp);
+    };
     return (
         <section className={'fruit'}>
             <FruitForm onSubmitHandler={onSubmitHandler} />
             <FruitList fruits={fruits} />
             /* Render the component FruitBalance here with the correct prop */
+            <FruitBalance {...fruits} />
         </section>
     )
 };
@@ -246,7 +283,7 @@ const FruitsAndVegetables = () => {
         }
     ];
 
-    const [ activeConfiguration ] = list.filter(produceConfiguration => produceConfiguration.produce === produce);
+    const [activeConfiguration] = list.filter(produceConfiguration => produceConfiguration.produce === produce);
 
     return (
         <div>
@@ -265,7 +302,7 @@ const FruitsAndVegetables = () => {
                 ))}
             </p>
             {/* You should add a property here, a unique key so the input updates when the configuration changes */}
-            <ProduceInput defaultProduce={activeConfiguration.default} />
+            <ProduceInput key={activeConfiguration.produce} defaultProduce={activeConfiguration.default} />
         </div>
     );
 };
@@ -279,7 +316,7 @@ const ProduceInput = ({ defaultProduce }) => {
 
     return (
         <label>
-            Produce: <input onChange={handleChange} value={produce} />
+            Produce: <input aria-label="produce-name" onChange={handleChange} value={produce} />
         </label>
     );
 };

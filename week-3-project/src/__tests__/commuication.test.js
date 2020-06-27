@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import {FruitApp, FruitAppWithBalance, FruitsAndVegetables, InterActiveFruits} from '../communication';
+import { FruitApp, FruitAppWithBalance, FruitsAndVegetables, InterActiveFruits } from '../communication';
 
 test('InterActiveFruits: does parent child communication', async () => {
     const { queryAllByTestId, getByText } = render(<InterActiveFruits />);
@@ -148,10 +148,14 @@ test('FruitAppWithBalance: supports peaches,', async () => {
 });
 
 test('FruitsAndVegetables: controlled inputs', async () => {
-    const { _ } = render(<FruitsAndVegetables />);
-
+    const { getByText, getByLabelText, queryAllByTestId } = render(<FruitsAndVegetables />);
+    let IHaveFixedTheBug = false;
     // I did not have time to write a test for this 😅 please test the FruitsAndVegetables rendered and see what the bug is.
+    // get the numberA input by aria label
+    const input = getByLabelText('produce-name');
+    fireEvent.change(input, { target: { value: 'vegetables' } });
+    let element = getByLabelText('vegetables');
+    IHaveFixedTheBug = element !== null ? true : false;
 
-    const IHaveFixedTheBug = false;
     expect(IHaveFixedTheBug).toBeTruthy();
 });
