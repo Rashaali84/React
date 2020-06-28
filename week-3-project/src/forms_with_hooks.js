@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 
-import './forms.css'
+import "./forms.css";
+import { findByTestId } from "@testing-library/react";
 
 // Exercise: Contact Form
 // We are looking to capture user feedback, for this we add a contact from
@@ -9,25 +10,31 @@ import './forms.css'
 
 const ContactForm = () => {
     // Create the state variables and functions to update them
-    const [comment, setComment] = useState('');
-    const [name, setName] = useState('');
-    const [submittedText, setSubmittedText] = useState('');
+    const [comment, setComment] = useState("");
+    const [name, setName] = useState("");
+    const [submittedText, setSubmittedText] = useState("");
 
     const onSubmit = (event) => {
         event.preventDefault(); // We disable the default behaviour of a form
         setSubmittedText(`Thanks for submitting ${name}`);
     };
 
+    function handleSetComment(e) {
+        setComment(e.target.value);
+    }
+    function handleSetName(e) {
+        setName(e.target.value);
+    }
     return (
         <section className="contact">
-            { !submittedText && (
+            {!submittedText && (
                 <form onSubmit={onSubmit}>
                     <div className="field">
                         <label htmlFor="comment">Your question or comment</label> <br />
                         <textarea
                             id="comment"
                             name="comment"
-                            onChange={(event) => { /* use event.target.value to set the comment */ }}
+                            onChange={handleSetComment}
                         />
                     </div>
                     <div className="field">
@@ -37,17 +44,15 @@ const ContactForm = () => {
                             type="text"
                             name="name"
                             aria-label="contact-name"
-                            onChange={(event) => { /* use event.target.value to set the name */ }}
+                            onChange={handleSetName}
                         />
                     </div>
                     <button type="submit">Send it!</button>
                 </form>
             )}
-            { submittedText && (
-                <p>{submittedText}</p>
-            )}
+            {submittedText && <p>{submittedText}</p>}
         </section>
-    )
+    );
 };
 
 // Exercise: Math Form
@@ -58,9 +63,16 @@ const ContactForm = () => {
 const MathForm = () => {
     const [numberA, setNumberA] = useState(0);
     const [numberB, setNumberB] = useState(0);
+    function handleSetNumberA(e) {
 
+        setNumberA(e.target.value);
+    }
+    function handleSetNumberB(e) {
+
+        setNumberB(e.target.value);
+    }
     // numberA and numberB are strings how can we force them to be numbers ?
-    const sum = numberA + numberB;
+    const sum = Number(numberA) + Number(numberB);
 
     return (
         <section className="contact">
@@ -71,22 +83,22 @@ const MathForm = () => {
                         type="number"
                         name="numberA"
                         aria-label="math-number-a"
-                        /* add an attribute with value here that causes numberA to update when the input changes */
+                        onChange={handleSetNumberA}
+                    /* add an attribute with value here that causes numberA to update when the input changes */
                     />
                     &nbsp; + &nbsp;
-                    <input
+          <input
                         id="name"
                         type="number"
                         name="numberA"
                         aria-label="math-number-b"
-                        /* add an attribute with value here that causes numberA to update when the input changes */
+                        onChange={handleSetNumberB}
+                    /* add an attribute with value here that causes numberA to update when the input changes */
                     />
                 </div>
             </form>
 
-            <p>
-                The sum of a and b is {sum}
-            </p>
+            <p>The sum of a and b is {sum}</p>
         </section>
     );
 };
@@ -100,54 +112,64 @@ const MathForm = () => {
 const FruitForm = () => {
     // Create the state variables and functions to update them
     const [fruits, setFruits] = useState([]);
-    const [fruit, setFruit] = useState('');
+    const [fruit, setFruit] = useState("");
 
-    let error = false; /* Add an expression here that validates if fruit is a banana or apple */
+    /* Add an expression here that validates if fruit is a banana or apple */
+    let error = true;
+    error = !['banana', 'apple'].includes(fruit);
+
+    function handleOnchange(e) { setFruit(e.target.value); }
 
     const onSubmit = (event) => {
         event.preventDefault(); // We disable the default behaviour of a form
-
         /* Only update the state of fruit if we have no errors */
-        setFruits([...fruits, fruit]);
+        if (!error)
+            setFruits([...fruits, fruit]);
+
     };
 
     return (
         <section className="contact">
             <form onSubmit={onSubmit}>
                 <div className="field">
-                    <label htmlFor="email">Banana or Apple</label> <br />
+                    <label htmlFor="email">Banana or Apple </label> <br />
                     <input
                         id="name"
                         type="text"
                         name="name"
                         aria-label="fruit-name"
-                        onChange={(event) => { setFruit(event.target.value) }}
+                        onChange={handleOnchange}
                     />
                 </div>
                 {error && (
-                    <p className="error">I don't recognize this fruit please make a choice between "banana" or "apple"</p>
+                    <p className="error">
+                        I don't recognize this fruit please make a choice between "banana" or "apple"
+          </p>
                 )}
                 <button type="submit">Add</button>
             </form>
             <ul>
                 {fruits.map((fruit, index) => {
-                    return <li key={index}><Fruit name={fruit} /></li>
+                    return (
+                        <li key={index}>
+                            <Fruit name={fruit} />
+                        </li>
+                    );
                 })}
             </ul>
         </section>
-    )
+    );
 };
 
 const Fruit = ({ name }) => {
     let fruitMoji;
-    if (name === 'banana') {
-        fruitMoji = '🍌';
-    }
-    else if (name === 'apple') {
-        fruitMoji = '🍎'
+    if (name === "banana") {
+        fruitMoji = "🍌";
+    } else if (name === "apple") {
+        fruitMoji = "🍎";
     }
 
-    return <span data-testid="fruit">{fruitMoji}</span>
+    return <span data-testid="fruit">{fruitMoji}</span>;
 };
 
 export { ContactForm, MathForm, FruitForm };

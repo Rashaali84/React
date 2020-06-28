@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
 import './forms.css'
 
@@ -22,17 +22,22 @@ class ContactForm extends React.Component {
         });
     };
 
+
+
     render() {
         return (
             <section className="contact">
-                { !this.state.submittedText && (
+                {!this.state.submittedText && (
                     <form onSubmit={this.onSubmit}>
                         <div className="field">
                             <label htmlFor="comment">Your question or comment</label> <br />
                             <textarea
                                 id="comment"
                                 name="comment"
-                                onChange={(event) => { /* use event.target.value to set the comment */ }}
+                                onChange={(event) => {
+                                    /* use event.target.value to set the comment */
+                                    this.setState({ comment: event.target.value });
+                                }}
                             />
                         </div>
                         <div className="field">
@@ -42,13 +47,16 @@ class ContactForm extends React.Component {
                                 type="text"
                                 name="name"
                                 aria-label="contact-name"
-                                onChange={(event) => { /* use event.target.value to set the name */ }}
+                                onChange={(event) => {
+                                    /* use event.target.value to set the name */
+                                    this.setState({ name: event.target.value });
+                                }}
                             />
                         </div>
                         <button type="submit">Send it!</button>
                     </form>
                 )}
-                { this.state.submittedText && (
+                {this.state.submittedText && (
                     <p>{this.state.submittedText}</p>
                 )}
             </section>
@@ -70,7 +78,7 @@ class MathForm extends React.Component {
 
     render() {
         // numberA and numberB are strings how can we force them to be numbers ?
-        const sum = this.state.numberA + this.state.numberB;
+        const sum = Number(this.state.numberA) + Number(this.state.numberB);
 
         return (
             <section className="contact">
@@ -81,7 +89,10 @@ class MathForm extends React.Component {
                             type="number"
                             name="numberA"
                             aria-label="math-number-a"
-                            /* add an attribute with value here that causes numberA to update when the input changes */
+                            onChange={(event) => {
+                                this.setState({ numberA: event.target.value })
+                            }}
+                        /* add an attribute with value here that causes numberA to update when the input changes */
                         />
                         &nbsp; + &nbsp;
                         <input
@@ -89,7 +100,10 @@ class MathForm extends React.Component {
                             type="number"
                             name="numberA"
                             aria-label="math-number-b"
-                            /* add an attribute with value here that causes numberA to update when the input changes */
+                            onChange={(event) => {
+                                this.setState({ numberB: event.target.value })
+                            }}
+                        /* add an attribute with value here that causes numberA to update when the input changes */
                         />
                     </div>
                 </form>
@@ -103,7 +117,7 @@ class MathForm extends React.Component {
 };
 
 // Exercise: Fruit Form
-// User can submit their favourite fruit in our form
+// User can submit their favorite fruit in our form
 // The form however only supports banana's and apples
 // TODO: Make sure users can only submit "banana" or "apple"
 // TODO: if an invalid fruit (not "banana" or "apple") is typed in an error message is displayed
@@ -117,20 +131,34 @@ class FruitForm extends React.Component {
 
     onSubmit = (event) => {
         event.preventDefault(); // We disable the default behaviour of a form
-
         /* Only update the state of fruit if we have no errors */
-        this.setState({
-            fruits: [...this.state.fruits, this.state.fruit]
-        })
+        const error = this.checkError(this.state.fruit);
+
+        if (!error) {
+            this.setState({
+                fruits: [...this.state.fruits, this.state.fruit]
+
+            })
+        }
+
+
     };
 
     setFruit = (fruit) => {
+        const error = this.checkError(fruit);
+
+        if (!error) {
+            this.setState({ fruit: fruit });
+        }
 
     }
+    checkError = (fruit) => {
+        const error = !['banana', 'apple'].includes(fruit);
+        return error;
 
+    }
     render() {
-        const error = false; /* Add an expression here that validates if fruit is a banana or apple */
-
+        const error = this.checkError(this.state.fruit);
         return (
             <section className="contact">
                 <form onSubmit={this.onSubmit}>
