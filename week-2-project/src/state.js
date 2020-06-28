@@ -14,11 +14,7 @@ const Ex1 = function () {
     return (
         <div>
             <p>{text}</p>
-<<<<<<< HEAD
             <button onClick={handleText}>
-=======
-            <button onClick={() => { setText('Hello World') }}>
->>>>>>> upstream/master
                 Translation please
             </button>
         </div>
@@ -43,18 +39,7 @@ const Ex2 = function () {
     return (
         <div>
             <p>{text[idx]}</p>
-<<<<<<< HEAD
             <button onClick={handleSecondClick}>
-=======
-            <button onClick={() => {
-                if (idx === 0) {
-                    setIdx(1);
-                }
-                else {
-                    setIdx(0);
-                }
-            }}>
->>>>>>> upstream/master
                 Translation please
             </button>
         </div>
@@ -93,17 +78,7 @@ const Ex3 = function () {
     return (
         <div>
             <p>{text[idx]}</p>
-<<<<<<< HEAD
             <button onClick={hanldleAllClicks}>
-=======
-            <button onClick={() => {
-                let newIdx = idx + 1;
-                if (newIdx > text.length - 1) {
-                    newIdx = 0;
-                }
-                setIdx(newIdx);
-            }}>
->>>>>>> upstream/master
                 Translation please
             </button>
         </div>
@@ -121,7 +96,6 @@ const Ex4 = function () {
     const lang = ['english', 'japanese'];
     const text = ['Hello 世界', 'Hello World'];
     const [idx, setIdx] = useState(0);
-<<<<<<< HEAD
     function handleBtnText(e) {
         if (idx == 0)
             setIdx(1);
@@ -133,20 +107,6 @@ const Ex4 = function () {
         <div>
             <p>{text[idx]}</p>
             <button onClick={handleBtnText}>
-=======
-
-    return (
-        <div>
-            <p>{text[idx]}</p>
-            <button onClick={() => {
-                if (idx === 0) {
-                    setIdx(1);
-                }
-                else {
-                    setIdx(0);
-                }
-            }}>
->>>>>>> upstream/master
                 Translation to {lang[idx]} please
             </button>
         </div>
