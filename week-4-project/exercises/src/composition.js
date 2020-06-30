@@ -1,8 +1,24 @@
-import React, {createContext, useContext, useState} from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 // Composition 1: The children props
 // TODO: use the children prop in the correct location
 
+
+
+const ColoredSection = ({ children }) => {
+    // Move the children props to the correct location
+    return (
+        <div>
+            <div style={{ backgroundColor: 'pink' }}>
+                {children}
+            </div>
+            <div style={{ backgroundColor: 'yellow' }}>
+
+            </div>
+
+        </div>
+    )
+};
 const Comp1 = () => {
     return (
         <section>
@@ -12,26 +28,13 @@ const Comp1 = () => {
         </section>
     )
 };
-
-const ColoredSection = ({ children }) => {
-    // Move the children props to the correct location
-    return (
-        <div>
-            <div style={{backgroundColor: 'pink'}}>
-            </div>
-            <div style={{backgroundColor: 'yellow'}}>
-                {children}
-            </div>
-        </div>
-    )
-};
-
 // Compostion 2: Adding functionality with composition
 // TODO: change the order, make sure the buttons are first
 
 const Comp2 = () => {
     return (
         <ul>
+
             <ListItem item={'foo'}>
                 <button>Edit</button>
                 <button>Delete</button>
@@ -47,8 +50,9 @@ const Comp2 = () => {
 const ListItem = ({ item, children }) => {
     return (
         <li>
-            {item}
             {children}
+            {item}
+
         </li>
     )
 };

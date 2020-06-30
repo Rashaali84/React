@@ -1,38 +1,46 @@
-import React, {createContext, useContext, useState} from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 // Exercise 1: Passing props
 // TODO: Make all the buttons black
+const BackContext = createContext('black');
 const Ex1 = () => {
 
     // Pass the background color through to the components
-    const backgroundColor = 'black';
-
     return (
         <div>
-            <Toolbar  />
-            <ShoppingCart />
+            <BackContext.Provider value='black'>
+                <Toolbar />
+                <ShoppingCart />
+            </BackContext.Provider>
         </div>
     )
 };
 
 const Toolbar = () => {
+
     return (
-        <div>
+        <div >
             <MyButton />
         </div>
     )
 };
 
 const ShoppingCart = () => {
+
     return (
+
         <div>
             <MyButton />
         </div>
     )
 };
 
-const MyButton = ({ backgroundColor = 'blue' }) => {
-    return <button style={{backgroundColor: backgroundColor}}>Click</button>
+const MyButton = ({ backgroundColor }) => {
+
+    const backgroundCol = useContext(BackContext);
+    return <button style={{ backgroundColor: backgroundCol }} >Click</button>
+
+
 };
 
 // Exercise 2: Context
@@ -44,7 +52,7 @@ const Ex2 = () => {
     return (
         <div>
             {/* Set a property value on the provider with as a value "black" */}
-            <ColorContext.Provider>
+            <ColorContext.Provider value='black'>
                 <OtherToolbar />
                 <OtherShoppingCart />
             </ColorContext.Provider>
@@ -70,7 +78,7 @@ const OtherShoppingCart = () => {
 
 const MyOtherButton = () => {
     const backgroundColor = useContext(ColorContext);
-    return <button style={{backgroundColor: backgroundColor}}>Click</button>
+    return <button style={{ backgroundColor: backgroundColor }}>Click</button>
 };
 
 // Exercise 3: Using state and context
@@ -83,14 +91,15 @@ const Ex3 = () => {
     return (
         <div>
             {/* Set a property value on the provider with as a value color */}
-            <ColorContext.Provider>
-                <button onClick={_ => setColor('pink')}>Pink</button>
-                <button onClick={_ => setColor('blue')}>Blue</button>
-                <button onClick={_ => setColor('black')}>Black</button>
-                <button onClick={_ => setColor('yellow')}>Yellow</button>
+            <ColorContext.Provider value={color}>
+                <button onClick={() => setColor('pink')}>Pink</button>
+                <button onClick={() => setColor('blue')}>Blue</button>
+                <button onClick={() => setColor('black')}>Black</button>
+                <button onClick={() => setColor('yellow')}>Yellow</button>
+                <OtherToolbar />
+                <OtherShoppingCart />
             </ColorContext.Provider>
-            <OtherToolbar />
-            <OtherShoppingCart />
+
         </div>
     )
 };
@@ -105,13 +114,14 @@ const Ex4 = () => {
     return (
         <div>
             {/* Set a property value on the provider with as a value color */}
-            <ColorContext.Provider>
+            <ColorContext.Provider value={color}>
+
+                <button onClick={() => setColor('pink')}>Pink</button>
+                <button onClick={() => setColor('blue')}>Blue</button>
+                <button onClick={() => setColor('black')}>Black</button>
+                <button onClick={() => setColor('yellow')}>Yellow</button>
                 <OtherToolbar />
                 <OtherShoppingCart />
-                <button onClick={_ => setColor('pink')}>Pink</button>
-                <button onClick={_ => setColor('blue')}>Blue</button>
-                <button onClick={_ => setColor('black')}>Black</button>
-                <button onClick={_ => setColor('yellow')}>Yellow</button>
             </ColorContext.Provider>
         </div>
     )
@@ -127,12 +137,15 @@ const ThemeContext = createContext({
 
 const Ex5 = () => {
 
-    {/* Set an appropriate theme */}
-    const theme = {};
+    {/* Set an appropriate theme */ }
+    let colortheme = useContext(ThemeContext);
+    colortheme.backgroundColor = 'pink';
+    colortheme.color = 'blue';
+
 
     return (
         <div>
-            <ColorContext.Provider value={theme}>
+            <ColorContext.Provider value={colortheme}>
                 <ThemedToolbar />
                 <ThemedShoppingCart />
             </ColorContext.Provider>
@@ -160,7 +173,7 @@ const ThemedShoppingCart = () => {
 const ThemedButton = () => {
     const theme = useContext(ThemeContext);
 
-    return <button style={{backgroundColor: theme.backgroundColor, color: theme.color}}>Click</button>
+    return <button style={{ backgroundColor: theme.backgroundColor, color: theme.color }}>Click</button>
 };
 
 
